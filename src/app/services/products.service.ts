@@ -10,8 +10,20 @@ export class ProductsService {
 
   constructor(private readonly apiService: ApiService) { }
 
-  getProducts(): Observable<Product[]>{
-    const products = this.apiService.get('?limit=5');
+  getProducts(page: number, perPage: number): Observable<Product[]>{
+    const products = this.apiService.get(`?offset=${page * perPage - page}&limit=${perPage}`);
     return products as Observable<Product[]>;
+  }
+
+  addProduct(product: Product): Observable<Product> {
+    return this.apiService.post('', product);
+  }
+
+  editProduct(product: Product): Observable<Product> {
+    return this.apiService.put(`/${product.id}`, product);
+  }
+
+  deleteProduct(id: Product["id"]): Observable<Product> {
+    return this.apiService.delete(`/${id}`);
   }
 }
