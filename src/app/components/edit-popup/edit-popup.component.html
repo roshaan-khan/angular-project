@@ -1,6 +1,27 @@
-<p-dialog header="Edit Product" [(visible)]="open" [modal]="true" [closable]="false">
+<p-dialog [header]="headerTitle" [(visible)]="open" [modal]="true" [closable]="false">
+    <div class="column gap-1">
+        <div class="row">
+            <label for="name">Title</label>
+            <input id="name" type="text" pInputText [(ngModel)]="product.title" />
+        </div>
+        <div class="row">
+            <label for="price">Price</label>
+            <input id="price" type="number" pInputText [(ngModel)]="product.price" />
+        </div>
+        <div class="row">
+            <label for="description">Description</label>
+            <textarea id="description" pInputTextarea [(ngModel)]="product.description"></textarea>
+        </div>
+        <div class="row">
+            <label for="image">Image</label>
+            <input id="image" type="text" pInputText [(ngModel)]="product.images[0]" />
+        </div>
+        <div class="row">
+            <p-rating [(ngModel)]="product.rating" iconCancelClass="hidden"></p-rating>
+        </div>
+    </div>
     <p-footer>
-        <button type="button" pButton icon="pi pi-check" (click)="onConfirm()" label="Save"></button>
-        <button type="button" pButton icon="pi pi-times" (click)="onCancel()" label="Cancel"></button>
+        <p-button type="button" pButton icon="pi pi-check" (click)="onConfirm()" label="Save"></p-button>
+        <p-button type="button" pButton icon="pi pi-times" (click)="onCancel()" label="Cancel"></p-button>
     </p-footer>
 </p-dialog>

@@ -4,17 +4,47 @@ import { Product } from '../../types';
 import { ProductComponent } from '../components/product/product.component';
 import { CommonModule } from '@angular/common';
 import { PaginatorModule } from 'primeng/paginator';
+import { EditPopupComponent } from '../components/edit-popup/edit-popup.component';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ProductComponent, CommonModule, PaginatorModule],
+  imports: [ProductComponent, CommonModule, PaginatorModule, EditPopupComponent, ButtonModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
   constructor(private readonly productsService: ProductsService) { }
   products: Product[] = [];
+  product: Product = { category: {}, images: [], description: '', id: 0, price: 0, rating: 0, title: '' };
+  displayAddPopup: boolean = false;
+  displayEditPopup: boolean = false;
+
+  toggleEditPopup(product: Product) {
+    this.product = product;
+    this.displayEditPopup = true;
+  }
+
+  toggleDeletePopup(id: Product["id"]) {
+    this.deleteProduct(id);
+  }
+
+  toggleAddPopup() {
+    this.displayAddPopup = true;
+  }
+
+  onConfirmEdit(product: Product) {
+    this.editProduct(product);
+    this.displayEditPopup = false;
+  }
+
+  onConfirmAdd(product: Product) {
+    product.category = { id: 1, name: 'Electronics' };
+    product.images = ['https://via.placeholder.com/150'];
+    this.addProduct(product);
+    this.displayAddPopup = false;
+  }
 
   onPageChange(event: any) {
     this.fetchProducts(event.page, event.rows);
@@ -28,7 +58,15 @@ export class HomeComponent {
       },
       error: (error) => console.error('Error fetching products', error)
     });
-  
+  }
+
+  fetchProduct(id: Product["id"]) {
+    this.productsService.getProduct(id).subscribe({
+      next: (product) => {
+        this.product = product;
+      },
+      error: (error) => console.error('Error fetching product', error)
+    });
   }
 
   editProduct(product: Product) {
